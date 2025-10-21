@@ -1,0 +1,370 @@
+/* Professional Medical UI - No emojis, clean design */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.App-header {
+  background: linear-gradient(135deg, #2c5282 0%, #2b6cb0 100%);
+  color: white;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.App-header h1 {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+.App-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3rem 1.5rem;
+}
+
+.App-footer {
+  background: rgba(255, 255, 255, 0.95);
+  color: #4a5568;
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.95rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Validation Container */
+.validation-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+.validation-title {
+  font-size: 1.5rem;
+  color: #2d3748;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.75rem;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 0.75rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #cbd5e0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.form-group input:disabled {
+  background: #f7fafc;
+  cursor: not-allowed;
+}
+
+/* Dropdown Styles */
+.dropdown-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #4299e1;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  padding: 0.875rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid #f7fafc;
+  transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: #ebf8ff;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item-code {
+  font-weight: 600;
+  color: #2c5282;
+  margin-right: 0.5rem;
+}
+
+.dropdown-item-desc {
+  color: #4a5568;
+}
+
+/* Button Styles */
+.validate-button {
+  width: 100%;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(66, 153, 225, 0.3);
+}
+
+.validate-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(66, 153, 225, 0.4);
+}
+
+.validate-button:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Loading State */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #4a5568;
+  font-size: 1.1rem;
+}
+
+.loading::after {
+  content: '...';
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}
+
+/* Results Container */
+.results-container {
+  margin-top: 2.5rem;
+  padding: 2rem;
+  border-radius: 10px;
+  border-left: 5px solid;
+  animation: fadeIn 0.4s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.results-container.valid-high {
+  background: #f0fff4;
+  border-color: #22543d;
+}
+
+.results-container.valid-moderate {
+  background: #f0fff4;
+  border-color: #38a169;
+}
+
+.results-container.uncertain {
+  background: #fffff0;
+  border-color: #d69e2e;
+}
+
+.results-container.invalid-moderate {
+  background: #fff5f5;
+  border-color: #e53e3e;
+}
+
+.results-container.invalid-high {
+  background: #fff5f5;
+  border-color: #c53030;
+}
+
+.result-status {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.result-status.valid {
+  color: #22543d;
+}
+
+.result-status.invalid {
+  color: #c53030;
+}
+
+.result-section {
+  margin-bottom: 1.5rem;
+}
+
+.result-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.result-section p {
+  font-size: 1rem;
+  color: #4a5568;
+  line-height: 1.6;
+}
+
+.confidence-display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.confidence-bar {
+  flex: 1;
+  height: 20px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #48bb78 0%, #38a169 100%);
+  transition: width 0.6s ease;
+}
+
+.confidence-text {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #2d3748;
+  min-width: 60px;
+}
+
+.source-badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.source-badge.database {
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.source-badge.ai {
+  background: #bee3f8;
+  color: #2c5282;
+}
+
+.source-badge.error {
+  background: #fed7d7;
+  color: #c53030;
+}
+
+/* Selected Codes Display */
+.selected-codes {
+  background: #f7fafc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.selected-code {
+  margin-bottom: 1rem;
+}
+
+.selected-code:last-child {
+  margin-bottom: 0;
+}
+
+.selected-code strong {
+  color: #2c5282;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.selected-code span {
+  color: #4a5568;
+  font-size: 0.95rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .App-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .validation-container {
+    padding: 1.5rem;
+  }
+  
+  .result-status {
+    font-size: 1.2rem;
+  }
+}
+
