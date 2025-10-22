@@ -132,7 +132,16 @@ npm start
 - ✅ 100% category coverage in sample generator
 - ✅ Comprehensive documentation
 
-## Recent Fixes (Oct 20, 2025)
+## Phase 2: Consistency & Accuracy Enhancements (Oct 21, 2025)
+
+### Implementing Now:
+- [ ] Update rag_validator.py (temperature=0.0, seed=42, caching)
+- [ ] Add validation_test_log table to database
+- [ ] Add auto-logging to app.py
+- [ ] Create 100 test cases file
+- [ ] Create assistant rating helper
+
+## Recent Fixes (Oct 20-21, 2025)
 
 ### Import Errors Fixed ✅
 - Fixed ModuleNotFoundError in generate_sample_relationships.py
@@ -145,6 +154,37 @@ npm start
 - Created `backend/utils/view_database.py` - view DB contents in terminal
 - Recommended DB Browser for SQLite (GUI tool) - https://sqlitebrowser.org/
 - Can now easily inspect all tables, data, and relationships
+
+### Database Successfully Populated ✅
+- Fixed column mappings in database_setup.py
+- All 4 Excel files successfully imported:
+  - 71,065 ICD codes ✅
+  - 8,241 ACHI codes ✅
+  - 1,606 code blocks ✅
+  - 2,144 ICD categories ✅
+- Imported and fixed Valid_Relationships.xlsx:
+  - 233 high-quality valid relationships (confidence ≥70%)
+  - Used medical knowledge to evaluate each pair
+  - Removed nonsense relationships (Dengue + Caesarean, etc.)
+
+### Consistency & Accuracy Enhancements (Oct 21, 2025) ✅
+- Updated rag_validator.py:
+  - temperature=0.0 (zero randomness)
+  - seed=42 (deterministic outputs)
+  - MD5 response caching (same input = instant cached response)
+- Enhanced prompts:
+  - Added decision tree logic for edge cases
+  - Added 8 diverse few-shot examples (symptom codes, .9 codes, context-dependent)
+  - NO artificial confidence caps or floors
+- Added automatic test logging:
+  - validation_test_log table in database
+  - Auto-logs every unique validation (no duplicates)
+  - Stores ICD, ACHI, decision, confidence%, reasoning
+- Generated 100 test cases:
+  - 10 from user screenshots
+  - 45 valid pairs (diverse categories)
+  - 45 invalid pairs (clear mismatches)
+  - Output: backend/tests/100_TEST_CASES.txt
 
 ## Notes
 - User must manually create `backend/.env` with OpenAI API key

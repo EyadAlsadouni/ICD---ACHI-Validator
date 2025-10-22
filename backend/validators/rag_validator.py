@@ -24,22 +24,35 @@ class RAGValidator:
         
         self.client = OpenAI(api_key=api_key)
         self.model = "gpt-4.1-mini"
-        self.temperature = 0.1
+        self.temperature = 0.0  # ZERO randomness for consistency
+        self.seed = 42  # Fixed seed for reproducibility
+        self.cache = {}  # Response cache for identical pairs
         
         # Ensure database connection
         if not db_manager.conn:
             db_manager.connect()
+    
+    def _get_cache_key(self, icd_code, achi_code):
+        """Generate cache key for ICD-ACHI pair"""
+        import hashlib
+        return hashlib.md5(f"{icd_code}:{achi_code}".encode()).hexdigest()
     
     def validate(self, icd_code: str, achi_code: str) -> dict:
         """
         RAG-Enhanced Validation with Few-Shot Learning
         
         Flow:
-        1. Check exact match in database (instant, 100% accurate)
-        2. Get similar examples from database (RAG context)
-        3. Use AI with examples for validation
+        1. Check cache (instant, consistent)
+        2. Check exact match in database (instant, 100% accurate)
+        3. Get similar examples from database (RAG context)
+        4. Use AI with examples for validation
         """
-        # Step 1: Get code details
+        # Step 1: Check cache first
+        cache_key = self._get_cache_key(icd_code, achi_code)
+        if cache_key in self.cache:
+            return self.cache[cache_key]
+        
+        # Step 2: Get code details
         icd_data = db_manager.get_icd_with_category(icd_code)
         achi_data = db_manager.get_achi_with_category(achi_code)
         
@@ -66,7 +79,7 @@ class RAGValidator:
         # Step 2: Check EXACT match in database
         exact_match = db_manager.get_exact_match(icd_code, achi_code)
         if exact_match:
-            return {
+            result = {
                 'is_valid': True,
                 'reasoning': exact_match['relationship'],
                 'confidence': 1.0,
@@ -76,6 +89,9 @@ class RAGValidator:
                 'icd_description': icd_data['description'],
                 'achi_description': achi_data['short_description']
             }
+            # Cache before returning
+            self.cache[cache_key] = result
+            return result
         
         # Step 3: Get SIMILAR examples from database
         similar_examples = db_manager.get_similar_examples(
@@ -96,6 +112,9 @@ class RAGValidator:
         # Add descriptions to result
         result['icd_description'] = icd_data['description']
         result['achi_description'] = achi_data['short_description']
+        
+        # Cache before returning
+        self.cache[cache_key] = result
         
         return result
     
@@ -147,6 +166,7 @@ Respond with JSON only:
                 model=self.model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=self.temperature,
+                seed=self.seed,  # Deterministic
                 max_tokens=800,
                 response_format={"type": "json_object"}
             )
@@ -170,34 +190,69 @@ Respond with JSON only:
     def validate_pure_ai(self, icd_data: dict, achi_data: dict) -> dict:
         """
         AI validation without examples (fallback for uncovered categories)
+        Uses enhanced prompt with decision tree and 8 diverse few-shot examples
         """
-        prompt = f"""You are an expert clinical coding specialist for Australian medical codes.
+        prompt = f"""You are an expert clinical coding specialist for Australian ICD-10-AM and ACHI codes.
 
-Validate this ICD-ACHI pairing:
+DECISION GUIDANCE (use as reference, not strict rules):
+
+1. CATEGORY MISMATCH: Completely unrelated categories → INVALID, high confidence (≥0.90)
+2. SYMPTOM CODES (R/S/T): Valid if procedure is diagnostic, moderate confidence (0.70-0.80)
+3. UNSPECIFIED (.9): Valid but moderate confidence (0.75-0.85) due to lack of specificity
+4. CLEAR INDICATION: Direct clinical relationship → VALID, high confidence (≥0.90)
+5. CONTEXT-DEPENDENT: Valid but requires specific context → moderate confidence (0.70-0.85)
+
+CONFIDENCE GUIDELINES (honest assessment, not constraints):
+- 0.90-1.00: Crystal clear indication or contraindication
+- 0.75-0.89: Strong evidence, generally appropriate or inappropriate
+- 0.60-0.74: Moderate confidence, context-dependent
+- Below 0.60: Uncertain or insufficient evidence
+
+FEW-SHOT EXAMPLES:
+
+Example 1 (INVALID, high confidence):
+ICD: K02.9 (Dental caries) + ACHI: 92209-00 (NIV respiratory support)
+Result: {{"is_valid": false, "confidence": 0.98, "reasoning": "Dental condition has no respiratory indication", "certainty_explanation": "Clear category mismatch"}}
+
+Example 2 (VALID, high confidence):
+ICD: J45.0 (Asthma) + ACHI: 92209-00 (NIV respiratory support)
+Result: {{"is_valid": true, "confidence": 0.95, "reasoning": "Direct indication for respiratory support in severe asthma", "certainty_explanation": "Textbook indication"}}
+
+Example 3 (VALID, moderate confidence - symptom code):
+ICD: R07.3 (Other chest pain) + ACHI: 92043-00 (Respiratory medication via nebuliser)
+Result: {{"is_valid": true, "confidence": 0.75, "reasoning": "Symptom code allows plausible respiratory cause, but chest pain is non-specific", "certainty_explanation": "Symptom code reduces certainty"}}
+
+Example 4 (VALID, moderate confidence - unspecified):
+ICD: J18.9 (Pneumonia, unspecified) + ACHI: 55130-00 (Bronchoscopy with lavage)
+Result: {{"is_valid": true, "confidence": 0.80, "reasoning": "Bronchoscopy appropriate for pneumonia workup, but .9 code lacks specificity", "certainty_explanation": "Unspecified diagnosis"}}
+
+Example 5 (VALID, moderate-low confidence - context-dependent):
+ICD: R10.4 (Unspecified abdominal pain) + ACHI: 30473-00 (Diagnostic laparoscopy)
+Result: {{"is_valid": true, "confidence": 0.72, "reasoning": "Symptom code suggests investigation, but valid only if alarm features present or failed conservative therapy", "certainty_explanation": "Requires clinical context"}}
+
+Example 6 (VALID, moderate confidence - context-dependent):
+ICD: I10 (Essential hypertension) + ACHI: 13100-00 (Continuous arterial monitoring)
+Result: {{"is_valid": true, "confidence": 0.82, "reasoning": "Appropriate for hypertensive crisis or perioperative monitoring, not routine outpatient", "certainty_explanation": "Context-specific indication"}}
+
+Example 7 (VALID, high confidence - preventive):
+ICD: A00.9 (Cholera, unspecified) + ACHI: 92498-00 (Vaccination against cholera)
+Result: {{"is_valid": true, "confidence": 0.90, "reasoning": "Direct prophylactic measure for cholera", "certainty_explanation": "Standard prevention"}}
+
+Example 8 (INVALID, high confidence - clear mismatch):
+ICD: A90 (Dengue fever) + ACHI: 16520-00 (Caesarean section)
+Result: {{"is_valid": false, "confidence": 0.95, "reasoning": "Dengue is viral infection, not obstetric indication for C-section", "certainty_explanation": "Completely unrelated categories"}}
+
+NOW VALIDATE THIS PAIR:
 
 ICD-10-AM: {icd_data['code']} - {icd_data['description']} [Category: {icd_data['category']}]
 ACHI: {achi_data['code']} - {achi_data['short_description']} [Category: {achi_data['category']}]
 
-Provide HONEST confidence based on medical appropriateness.
-
-FEW-SHOT EXAMPLES (for guidance):
-
-Example 1 (INVALID - High Confidence):
-ICD: K02.9 (Dental caries) + ACHI: 92209-00 (NIV support)
-Result: Invalid - Dental conditions don't require respiratory support. Confidence: 0.98
-
-Example 2 (VALID - High Confidence):
-ICD: J45.0 (Asthma) + ACHI: 92209-00 (NIV support)
-Result: Valid - NIV is standard treatment for severe asthma. Confidence: 0.95
-
-Example 3 (VALID - Moderate Confidence):
-ICD: I10 (Hypertension) + ACHI: 13100-00 (Cardiac monitoring)
-Result: Valid - Cardiac monitoring appropriate for hypertension management. Confidence: 0.82
+Provide HONEST confidence based on your actual medical certainty. No artificial caps or floors.
 
 Respond with JSON only:
 {{
     "is_valid": true/false,
-    "reasoning": "Clinical explanation",
+    "reasoning": "Detailed clinical explanation",
     "confidence": 0.0-1.0,
     "certainty_explanation": "Why this confidence level"
 }}"""
@@ -207,6 +262,7 @@ Respond with JSON only:
                 model=self.model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=self.temperature,
+                seed=self.seed,  # Deterministic
                 max_tokens=800,
                 response_format={"type": "json_object"}
             )

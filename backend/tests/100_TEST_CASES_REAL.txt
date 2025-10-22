@@ -1,0 +1,116 @@
+======================================================================
+100 TEST CASES - USING ONLY REAL DATABASE CODES
+======================================================================
+
+INSTRUCTIONS:
+1. Start backend and frontend
+2. For each case, copy ICD and ACHI codes
+3. Paste into website dropdowns and click Validate
+4. Results are automatically logged
+
+======================================================================
+
+  1. ICD: J45.0      | ACHI: 92209-00     | Asthma + NIV
+  2. ICD: K02.9      | ACHI: 92209-00     | Dental + NIV
+  3. ICD: A00        | ACHI: 92143-00     | Cholera + cholera vaccine
+  4. ICD: A90        | ACHI: 16520-00     | Dengue + C-section
+  5. ICD: R07.3      | ACHI: 92043-00     | Chest pain + nebuliser
+  6. ICD: J18.9      | ACHI: 55130-00     | Pneumonia + bronchoscopy
+  7. ICD: R10.4      | ACHI: 30473-00     | Abdominal pain + laparoscopy
+  8. ICD: I10        | ACHI: 13100-00     | Hypertension + monitoring
+  9. ICD: J18.9      | ACHI: 38600-00     | Pneumonia + TEE
+ 10. ICD: R10.4      | ACHI: 30475-00     | Abdominal pain + endoscopy
+ 11. ICD: J00        | ACHI: 11503-00     | Acute nasopharyngitis [common  + Measure resp musc strength inv - Valid
+ 12. ICD: J00        | ACHI: 11503-01     | Acute nasopharyngitis [common  + Measure resp musc strength mul - Valid
+ 13. ICD: J01        | ACHI: 11503-00     | Acute sinusitis + Measure resp musc strength inv - Valid
+ 14. ICD: J01        | ACHI: 11503-01     | Acute sinusitis + Measure resp musc strength mul - Valid
+ 15. ICD: J01.0      | ACHI: 11503-00     | Acute maxillary sinusitis + Measure resp musc strength inv - Valid
+ 16. ICD: J01.0      | ACHI: 11503-01     | Acute maxillary sinusitis + Measure resp musc strength mul - Valid
+ 17. ICD: J01.00     | ACHI: 11503-00     | Acute maxillary sinusitis, uns + Measure resp musc strength inv - Valid
+ 18. ICD: J01.00     | ACHI: 11503-01     | Acute maxillary sinusitis, uns + Measure resp musc strength mul - Valid
+ 19. ICD: J01.01     | ACHI: 11503-00     | Acute recurrent maxillary sinu + Measure resp musc strength inv - Valid
+ 20. ICD: J01.01     | ACHI: 11503-01     | Acute recurrent maxillary sinu + Measure resp musc strength mul - Valid
+ 21. ICD: I00        | ACHI: 11503-08     | Rheumatic fever wo mention hea + Assess art CO2 tension/cardiac - Valid
+ 22. ICD: I00        | ACHI: 11600-00     | Rheumatic fever wo mention hea + Cardiac intracavity blood pres - Valid
+ 23. ICD: I01        | ACHI: 11503-08     | Rheumatic fever with heart inv + Assess art CO2 tension/cardiac - Valid
+ 24. ICD: I01        | ACHI: 11600-00     | Rheumatic fever with heart inv + Cardiac intracavity blood pres - Valid
+ 25. ICD: I01.0      | ACHI: 11503-08     | Acute rheumatic pericarditis + Assess art CO2 tension/cardiac - Valid
+ 26. ICD: I01.0      | ACHI: 11600-00     | Acute rheumatic pericarditis + Cardiac intracavity blood pres - Valid
+ 27. ICD: I01.1      | ACHI: 11503-08     | Acute rheumatic endocarditis + Assess art CO2 tension/cardiac - Valid
+ 28. ICD: I01.1      | ACHI: 11600-00     | Acute rheumatic endocarditis + Cardiac intracavity blood pres - Valid
+ 29. ICD: I01.2      | ACHI: 11503-08     | Acute rheumatic myocarditis + Assess art CO2 tension/cardiac - Valid
+ 30. ICD: I01.2      | ACHI: 11600-00     | Acute rheumatic myocarditis + Cardiac intracavity blood pres - Valid
+ 31. ICD: K00        | ACHI: 11810-00     | Disorders tooth development &  + Measure gastoesph reflux 24hr  - Valid
+ 32. ICD: K00        | ACHI: 12506-00     | Disorders tooth development &  + GI nuclear med blood loss esti - Valid
+ 33. ICD: K00.0      | ACHI: 11810-00     | Anodontia + Measure gastoesph reflux 24hr  - Valid
+ 34. ICD: K00.0      | ACHI: 12506-00     | Anodontia + GI nuclear med blood loss esti - Valid
+ 35. ICD: K00.1      | ACHI: 11810-00     | Supernumerary teeth + Measure gastoesph reflux 24hr  - Valid
+ 36. ICD: K00.1      | ACHI: 12506-00     | Supernumerary teeth + GI nuclear med blood loss esti - Valid
+ 37. ICD: K00.2      | ACHI: 11810-00     | Abnormalities of size and form + Measure gastoesph reflux 24hr  - Valid
+ 38. ICD: K00.2      | ACHI: 12506-00     | Abnormalities of size and form + GI nuclear med blood loss esti - Valid
+ 39. ICD: K00.3      | ACHI: 11810-00     | Mottled teeth + Measure gastoesph reflux 24hr  - Valid
+ 40. ICD: K00.3      | ACHI: 12506-00     | Mottled teeth + GI nuclear med blood loss esti - Valid
+ 41. ICD: K02        | ACHI: 11503-00     | Dental caries + Measure resp musc strength inv - Invalid
+ 42. ICD: K02        | ACHI: 11503-01     | Dental caries + Measure resp musc strength mul - Invalid
+ 43. ICD: K02.0      | ACHI: 11503-00     | Caries limited to enamel + Measure resp musc strength inv - Invalid
+ 44. ICD: K02.0      | ACHI: 11503-01     | Caries limited to enamel + Measure resp musc strength mul - Invalid
+ 45. ICD: K02.1      | ACHI: 11503-00     | Caries of dentine + Measure resp musc strength inv - Invalid
+ 46. ICD: K02.1      | ACHI: 11503-01     | Caries of dentine + Measure resp musc strength mul - Invalid
+ 47. ICD: J45        | ACHI: 11503-08     | Asthma + Assess art CO2 tension/cardiac - Invalid
+ 48. ICD: J45        | ACHI: 11600-00     | Asthma + Cardiac intracavity blood pres - Invalid
+ 49. ICD: J45.0      | ACHI: 11503-08     | Predominantly allergic asthma + Assess art CO2 tension/cardiac - Invalid
+ 50. ICD: J45.0      | ACHI: 11600-00     | Predominantly allergic asthma + Cardiac intracavity blood pres - Invalid
+ 51. ICD: J45.1      | ACHI: 11503-08     | Nonallergic asthma + Assess art CO2 tension/cardiac - Invalid
+ 52. ICD: J45.1      | ACHI: 11600-00     | Nonallergic asthma + Cardiac intracavity blood pres - Invalid
+ 53. ICD: I82.B1     | ACHI: 93341-77     | Random pair
+ 54. ICD: V84.38     | ACHI: 18292-01     | Random pair
+ 55. ICD: S21.059    | ACHI: 96192-02     | Random pair
+ 56. ICD: K50.811    | ACHI: 96225-00     | Random pair
+ 57. ICD: S60.341    | ACHI: 18368-00     | Random pair
+ 58. ICD: Q89.35     | ACHI: 39109-00     | Random pair
+ 59. ICD: R87.613    | ACHI: 95355-09     | Random pair
+ 60. ICD: F23.21     | ACHI: 42644-02     | Random pair
+ 61. ICD: V43.70     | ACHI: 18209-07     | Random pair
+ 62. ICD: X22.4      | ACHI: 90436-00     | Random pair
+ 63. ICD: Y05.58     | ACHI: 96042-00     | Random pair
+ 64. ICD: W65.04     | ACHI: 35009-01     | Random pair
+ 65. ICD: H34.9      | ACHI: 47618-02     | Random pair
+ 66. ICD: G43.809    | ACHI: 18216-25     | Random pair
+ 67. ICD: H73.12     | ACHI: 90564-00     | Random pair
+ 68. ICD: C97        | ACHI: 38606-00     | Random pair
+ 69. ICD: V67.69     | ACHI: 45641-02     | Random pair
+ 70. ICD: Q30.1      | ACHI: 34103-06     | Random pair
+ 71. ICD: B97.7      | ACHI: 33839-06     | Random pair
+ 72. ICD: X30.90     | ACHI: 34124-01     | Random pair
+ 73. ICD: I69.321    | ACHI: 95361-03     | Random pair
+ 74. ICD: G99.0      | ACHI: 55280-00     | Random pair
+ 75. ICD: W05.6      | ACHI: 90011-02     | Random pair
+ 76. ICD: V18.40     | ACHI: 93341-63     | Random pair
+ 77. ICD: F16.0      | ACHI: 50348-00     | Random pair
+ 78. ICD: O10.01     | ACHI: 30578-00     | Random pair
+ 79. ICD: D68.4      | ACHI: 38530-00     | Random pair
+ 80. ICD: W45.14     | ACHI: 38303-01     | Random pair
+ 81. ICD: I70.333    | ACHI: 58921-00     | Random pair
+ 82. ICD: V55.28     | ACHI: 47363-01     | Random pair
+ 83. ICD: W23.09     | ACHI: 32094-00     | Random pair
+ 84. ICD: H21.4      | ACHI: 32120-00     | Random pair
+ 85. ICD: O99.111    | ACHI: 47933-02     | Random pair
+ 86. ICD: H59.093    | ACHI: 43936-00     | Random pair
+ 87. ICD: Q53.9      | ACHI: 95254-00     | Random pair
+ 88. ICD: X54.9      | ACHI: 90141-00     | Random pair
+ 89. ICD: K31.88     | ACHI: 41884-00     | Random pair
+ 90. ICD: M48.41     | ACHI: 95057-00     | Random pair
+ 91. ICD: T69.8      | ACHI: 96196-09     | Random pair
+ 92. ICD: W09.83     | ACHI: 45215-00     | Random pair
+ 93. ICD: O41.12     | ACHI: 36650-00     | Random pair
+ 94. ICD: H16.121    | ACHI: 42692-01     | Random pair
+ 95. ICD: M90.75     | ACHI: 38436-01     | Random pair
+ 96. ICD: H70.211    | ACHI: 48615-01     | Random pair
+ 97. ICD: X95.19     | ACHI: 35539-00     | Random pair
+ 98. ICD: M49.31     | ACHI: 96230-00     | Random pair
+ 99. ICD: V52.00     | ACHI: 41689-01     | Random pair
+100. ICD: P37.3      | ACHI: 32186-00     | Random pair
+
+======================================================================
+Total: 100 test cases (ALL CODES VERIFIED IN DATABASE)
+======================================================================

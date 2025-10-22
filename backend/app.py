@@ -180,10 +180,43 @@ async def validate_codes(request: ValidationRequest):
     3. AI validates using examples as context
     
     Returns validation result with REAL confidence scores
+    
+    AUTO-LOGS unique test results to validation_test_log table
     """
     try:
         # Validate using RAG validator
         result = rag_validator.validate(request.icd_code, request.achi_code)
+        
+        # AUTO-LOG UNIQUE TEST RESULTS (no duplicates)
+        try:
+            import sqlite3
+            from pathlib import Path
+            
+            db_path = os.getenv('DATABASE_PATH', 'data/validation.db')
+            # Handle both relative paths
+            if not Path(db_path).exists():
+                db_path = 'backend/data/validation.db'
+            if not Path(db_path).exists():
+                db_path = Path(__file__).parent / 'data' / 'validation.db'
+            
+            conn = sqlite3.connect(str(db_path))
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT OR IGNORE INTO validation_test_log 
+                (icd_code, achi_code, ai_decision, ai_confidence_percent, ai_reasoning)
+                VALUES (?, ?, ?, ?, ?)
+            """, (
+                request.icd_code,
+                request.achi_code,
+                "Valid" if result['is_valid'] else "Invalid",
+                result['confidence'] * 100,  # Convert 0.75 → 75.0
+                result['reasoning']
+            ))
+            conn.commit()
+            conn.close()
+        except Exception as log_error:
+            # Non-blocking - don't fail validation if logging fails
+            print(f"[LOG WARNING] Failed to log test result: {log_error}")
         
         # Return response
         return ValidationResponse(

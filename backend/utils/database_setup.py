@@ -94,6 +94,22 @@ def create_database():
     """)
     print("✓ Created table: valid_relationships")
     
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS validation_test_log (
+            test_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            icd_code TEXT NOT NULL,
+            achi_code TEXT NOT NULL,
+            ai_decision TEXT NOT NULL,
+            ai_confidence_percent REAL NOT NULL,
+            ai_reasoning TEXT NOT NULL,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            assistant_rating TEXT,
+            assistant_notes TEXT,
+            UNIQUE(icd_code, achi_code)
+        )
+    """)
+    print("✓ Created table: validation_test_log")
+    
     # Create indexes
     print("\nCreating indexes...")
     cursor.execute("CREATE INDEX idx_icd_code ON icd10am_codes(code)")
