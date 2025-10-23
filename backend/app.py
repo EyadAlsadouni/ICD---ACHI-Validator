@@ -20,6 +20,10 @@ sys.path.insert(0, str(Path(__file__).parent))
 # Import our modules
 from database.queries import db_manager
 from validators.rag_validator import rag_validator
+from validators.hierarchical_validator import HierarchicalValidator
+
+# Initialize validators
+hierarchical_validator = HierarchicalValidator()
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -55,6 +59,7 @@ class ValidationResponse(BaseModel):
     certainty_explanation: str
     source: str
     similar_examples_count: int = 0
+    hierarchical_context: Optional[bool] = False
 
 class SearchResult(BaseModel):
     code: str
@@ -149,14 +154,15 @@ async def search_icd(query: str):
 @app.get("/api/search/achi/{query}")
 async def search_achi(query: str):
     """
-    Search ACHI codes for autocomplete
-    Returns top 20 matching codes
+    Search ACHI codes for autocomplete using hierarchical v2 table
+    Returns top 20 matching codes with hierarchical context
     """
     try:
         if len(query) < 1:
             return []
         
-        results = db_manager.search_achi_codes(query, limit=20)
+        # Use v2 table for hierarchical search
+        results = db_manager.search_achi_codes_v2(query, limit=20)
         
         return [
             {
@@ -237,6 +243,57 @@ async def validate_codes(request: ValidationRequest):
             status_code=500,
             detail=f"Validation error: {str(e)}"
         )
+
+@app.post("/api/validate/hierarchical", response_model=ValidationResponse)
+async def validate_codes_hierarchical(request: ValidationRequest):
+    """
+    Validate ICD-10-AM and ACHI code pairing using hierarchical context
+    
+    Uses the new ACHI-10th Edition hierarchical structure:
+    - 20 main categories (e.g., "01 Procedures on nervous system")
+    - 124 sub-categories (e.g., "0001-0028 Skull, Meninges and Brain")
+    - 4,668 ACHI codes with full hierarchy
+    
+    Provides enhanced context to AI for better validation accuracy
+    """
+    try:
+        # Get code descriptions first
+        icd_data = db_manager.get_icd_with_category(request.icd_code)
+        achi_data = db_manager.get_achi_with_hierarchy(request.achi_code)
+        
+        if not icd_data:
+            raise HTTPException(status_code=404, detail=f"ICD code {request.icd_code} not found")
+        
+        if not achi_data:
+            raise HTTPException(status_code=404, detail=f"ACHI code {request.achi_code} not found")
+        
+        # Use hierarchical validator
+        result = hierarchical_validator.validate_with_hierarchy(
+            request.icd_code, 
+            icd_data['description'],
+            request.achi_code, 
+            achi_data['description']
+        )
+        
+        # Convert result format
+        is_valid, confidence, reasoning = result
+        
+        return ValidationResponse(
+            icd_code=request.icd_code,
+            icd_description=icd_data['description'],
+            achi_code=request.achi_code,
+            achi_description=achi_data['description'],
+            is_valid=is_valid,
+            confidence=confidence,
+            reasoning=reasoning,
+            source="hierarchical_ai",
+            hierarchical_context=True
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Hierarchical validation error: {str(e)}")
 
 # Run with: uvicorn app:app --host 0.0.0.0 --port 5003 --reload
 if __name__ == "__main__":

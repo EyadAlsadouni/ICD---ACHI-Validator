@@ -118,6 +118,95 @@ class RAGValidator:
         
         return result
     
+    def validate_with_hierarchical_context(self, icd_code: str, icd_desc: str, achi_code: str, achi_desc: str, context: dict) -> dict:
+        """
+        AI validation with hierarchical context from ACHI-10th Edition structure
+        Context provides medical domain information but AI generates confidence
+        """
+        # Build hierarchical context prompt
+        hierarchical_info = f"""
+HIERARCHICAL CONTEXT:
+
+ICD-10-AM Code: {icd_code} - {icd_desc}
+└─ ICD Chapter: {context['icd_chapter']} ({context['icd_chapter_name']})
+
+ACHI Code: {achi_code} - {achi_desc}
+└─ Main Category: {context['achi_main_category']} - {context['achi_main_name']}
+└─ Sub-Category: {context['achi_sub_category']}
+
+CATEGORY MAPPING STATUS:
+{context['icd_chapter_name']} ↔ {context['achi_main_name']}
+Mapping Found: {'Yes' if context['category_match'] else 'No'}
+"""
+        
+        if context['mapping_notes']:
+            hierarchical_info += f"\nMAPPING EXAMPLES: {context['mapping_notes']}"
+        
+        prompt = f"""You are an expert clinical coding specialist for Australian ICD-10-AM and ACHI codes.
+
+{hierarchical_info}
+
+TASK: Validate if this ACHI procedure is clinically appropriate for this ICD-10-AM diagnosis.
+
+CRITICAL INSTRUCTIONS:
+- Use the hierarchical context as MEDICAL DOMAIN GUIDANCE only
+- Generate confidence based on your ACTUAL medical knowledge and reasoning
+- Do NOT use mapping confidence as your validation confidence
+- Be HONEST about your certainty level
+- Consider the specific procedure within its sub-category context
+
+CONFIDENCE GUIDELINES (be honest):
+- 0.90-1.0: Clear clinical indication or contraindication
+- 0.80-0.89: Strong clinical evidence but some edge cases possible  
+- 0.70-0.79: Moderate clinical appropriateness
+- 0.50-0.69: Uncertain, requires clinical judgment
+- Below 0.50: Very uncertain or inappropriate
+
+Respond with JSON only:
+{{
+    "is_valid": true/false,
+    "reasoning": "Detailed clinical explanation using hierarchical context",
+    "confidence": 0.0-1.0,
+    "certainty_explanation": "Why this confidence level based on medical reasoning"
+}}"""
+
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=self.temperature,
+                seed=self.seed,
+                max_tokens=800,
+                response_format={"type": "json_object"}
+            )
+            
+            result = json.loads(response.choices[0].message.content)
+            result['source'] = 'ai_hierarchical'
+            result['hierarchical_context'] = True
+            
+            return result
+        
+        except Exception as e:
+            return {
+                'is_valid': False,
+                'reasoning': f'API Error: {str(e)}',
+                'confidence': 0.0,
+                'certainty_explanation': 'Error calling AI model',
+                'source': 'error',
+                'hierarchical_context': False
+            }
+    
+    def validate_code_pair(self, icd_code: str, icd_desc: str, achi_code: str, achi_desc: str, context: dict = None) -> dict:
+        """
+        Wrapper method for compatibility with hierarchical validator
+        Falls back to regular validation if no context provided
+        """
+        if context and context.get('hierarchical_context'):
+            return self.validate_with_hierarchical_context(icd_code, icd_desc, achi_code, achi_desc, context)
+        else:
+            # Fallback to regular validation
+            return self.validate(icd_code, achi_code)
+    
     def validate_with_similar_examples(self, icd_data: dict, achi_data: dict, examples: list) -> dict:
         """
         AI validation with similar examples as few-shot learning

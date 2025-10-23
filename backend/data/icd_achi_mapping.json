@@ -1,0 +1,213 @@
+{
+  "mappings": [
+    {
+      "icd_chapter": "G00-G99",
+      "icd_chapter_name": "Diseases of the nervous system",
+      "achi_main_categories": ["01"],
+      "achi_names": ["Procedures on nervous system"],
+      "confidence": 0.95,
+      "examples": [
+        {"icd": "G45.9", "achi": "39006-00", "valid": true, "reasoning": "TIA may require ventricular puncture for diagnostic purposes"},
+        {"icd": "G20", "achi": "40700-00", "valid": true, "reasoning": "Parkinson's disease may require corpus callosum section for severe cases"}
+      ]
+    },
+    {
+      "icd_chapter": "I00-I99",
+      "icd_chapter_name": "Diseases of the circulatory system",
+      "achi_main_categories": ["08"],
+      "achi_names": ["Procedures on cardiovascular system"],
+      "confidence": 0.95,
+      "examples": [
+        {"icd": "I21.9", "achi": "38215-00", "valid": true, "reasoning": "AMI requires coronary angiography for diagnosis and treatment"},
+        {"icd": "I50.0", "achi": "92044-00", "valid": true, "reasoning": "CHF causes hypoxia requiring oxygen therapy"}
+      ]
+    },
+    {
+      "icd_chapter": "J00-J99",
+      "icd_chapter_name": "Diseases of the respiratory system",
+      "achi_main_categories": ["07"],
+      "achi_names": ["Procedures on respiratory system"],
+      "confidence": 0.95,
+      "examples": [
+        {"icd": "J45.0", "achi": "92209-00", "valid": true, "reasoning": "Asthma exacerbation requires NIV support"},
+        {"icd": "J18.9", "achi": "13882-00", "valid": true, "reasoning": "Pneumonia may require mechanical ventilation"}
+      ]
+    },
+    {
+      "icd_chapter": "K00-K14",
+      "icd_chapter_name": "Diseases of oral cavity and salivary glands",
+      "achi_main_categories": ["06"],
+      "achi_names": ["Dental services"],
+      "confidence": 0.95,
+      "examples": [
+        {"icd": "K02.9", "achi": "52318-00", "valid": true, "reasoning": "Dental caries requires tooth extraction when severe"},
+        {"icd": "K04.0", "achi": "52318-00", "valid": true, "reasoning": "Pulpitis requires tooth extraction or root canal"}
+      ]
+    },
+    {
+      "icd_chapter": "K20-K93",
+      "icd_chapter_name": "Diseases of the digestive system",
+      "achi_main_categories": ["10"],
+      "achi_names": ["Procedures on digestive system"],
+      "confidence": 0.95,
+      "examples": [
+        {"icd": "K80.0", "achi": "30443-00", "valid": true, "reasoning": "Gallstones with cholecystitis requires cholecystectomy"},
+        {"icd": "K57.3", "achi": "32090-00", "valid": true, "reasoning": "Diverticular disease requires colonoscopy for diagnosis"}
+      ]
+    },
+    {
+      "icd_chapter": "H00-H59",
+      "icd_chapter_name": "Diseases of the eye and adnexa",
+      "achi_main_categories": ["03"],
+      "achi_names": ["Procedures on eye and adnexa"],
+      "confidence": 0.95,
+      "examples": [
+        {"icd": "H26.9", "achi": "42702-00", "valid": true, "reasoning": "Cataract requires intracapsular extraction"},
+        {"icd": "H40.9", "achi": "42700-00", "valid": true, "reasoning": "Glaucoma may require trabeculectomy"}
+      ]
+    },
+    {
+      "icd_chapter": "H60-H95",
+      "icd_chapter_name": "Diseases of the ear and mastoid process",
+      "achi_main_categories": ["04"],
+      "achi_names": ["Procedures on ear and mastoid process"],
+      "confidence": 0.95,
+      "examples": [
+        {"icd": "H66.9", "achi": "41674-00", "valid": false, "reasoning": "Otitis media affects middle ear, not nasal turbinates"},
+        {"icd": "H90.3", "achi": "41600-00", "valid": true, "reasoning": "Hearing loss may require tympanoplasty"}
+      ]
+    },
+    {
+      "icd_chapter": "M00-M99",
+      "icd_chapter_name": "Diseases of the musculoskeletal system and connective tissue",
+      "achi_main_categories": ["15"],
+      "achi_names": ["Procedures on musculoskeletal system"],
+      "confidence": 0.95,
+      "examples": [
+        {"icd": "M17.9", "achi": "49518-00", "valid": true, "reasoning": "Knee osteoarthritis requires total knee replacement"},
+        {"icd": "M16.9", "achi": "49319-00", "valid": true, "reasoning": "Hip osteoarthritis requires total hip replacement"}
+      ]
+    },
+    {
+      "icd_chapter": "N00-N99",
+      "icd_chapter_name": "Diseases of the genitourinary system",
+      "achi_main_categories": ["11", "12", "13"],
+      "achi_names": ["Procedures on urinary system", "Procedures on male genital organs", "Gynaecological procedures"],
+      "confidence": 0.90,
+      "examples": [
+        {"icd": "N20.0", "achi": "36561-00", "valid": false, "reasoning": "Kidney stones require removal procedures, not biopsy"},
+        {"icd": "N40.1", "achi": "11600-00", "valid": true, "reasoning": "Prostate hyperplasia requires prostatectomy"}
+      ]
+    },
+    {
+      "icd_chapter": "L00-L99",
+      "icd_chapter_name": "Diseases of the skin and subcutaneous tissue",
+      "achi_main_categories": ["16"],
+      "achi_names": ["Dermatological and plastic procedures"],
+      "confidence": 0.95,
+      "examples": [
+        {"icd": "L02.9", "achi": "30196-00", "valid": false, "reasoning": "Skin abscess requires incision and drainage, not abdominal procedure"},
+        {"icd": "L70.9", "achi": "16000-00", "valid": true, "reasoning": "Acne may require dermatological procedures"}
+      ]
+    },
+    {
+      "icd_chapter": "C00-D48",
+      "icd_chapter_name": "Neoplasms",
+      "achi_main_categories": ["17", "18"],
+      "achi_names": ["Procedures on breast", "Radiation oncology procedures"],
+      "confidence": 0.90,
+      "examples": [
+        {"icd": "C50.9", "achi": "30367-00", "valid": true, "reasoning": "Breast cancer requires excision of breast tissue"},
+        {"icd": "C78.0", "achi": "17860-00", "valid": true, "reasoning": "Lung metastasis may require radiation therapy"}
+      ]
+    },
+    {
+      "icd_chapter": "E00-E89",
+      "icd_chapter_name": "Endocrine, nutritional and metabolic diseases",
+      "achi_main_categories": ["02"],
+      "achi_names": ["Procedures on endocrine system"],
+      "confidence": 0.95,
+      "examples": [
+        {"icd": "E11.9", "achi": "96238-00", "valid": true, "reasoning": "Diabetes may require cognitive assessment for complications"},
+        {"icd": "E04.1", "achi": "11100-00", "valid": true, "reasoning": "Thyroid nodule requires thyroidectomy"}
+      ]
+    },
+    {
+      "icd_chapter": "F01-F99",
+      "icd_chapter_name": "Mental, behavioural and neurodevelopmental disorders",
+      "achi_main_categories": ["19"],
+      "achi_names": ["Non-invasive, cognitive and other interventions"],
+      "confidence": 0.90,
+      "examples": [
+        {"icd": "F10.2", "achi": "96152-00", "valid": true, "reasoning": "Alcohol dependence may benefit from biofeedback therapy"},
+        {"icd": "F32.9", "achi": "96238-00", "valid": true, "reasoning": "Depression may require cognitive assessment"}
+      ]
+    },
+    {
+      "icd_chapter": "R00-R94",
+      "icd_chapter_name": "Symptoms, signs and abnormal clinical and laboratory findings",
+      "achi_main_categories": ["19", "20"],
+      "achi_names": ["Non-invasive, cognitive and other interventions", "Imaging services"],
+      "confidence": 0.85,
+      "examples": [
+        {"icd": "R06.0", "achi": "92209-00", "valid": true, "reasoning": "Dyspnoea may require NIV support"},
+        {"icd": "R10.4", "achi": "30473-00", "valid": true, "reasoning": "Abdominal pain may require endoscopy for diagnosis"}
+      ]
+    },
+    {
+      "icd_chapter": "S00-T98",
+      "icd_chapter_name": "Injury, poisoning and certain other consequences of external causes",
+      "achi_main_categories": ["15", "16"],
+      "achi_names": ["Procedures on musculoskeletal system", "Dermatological and plastic procedures"],
+      "confidence": 0.90,
+      "examples": [
+        {"icd": "S72.0", "achi": "47309-00", "valid": false, "reasoning": "Femur fracture requires fixation of femur, not hand"},
+        {"icd": "S82.2", "achi": "47519-00", "valid": false, "reasoning": "Tibia fracture requires fixation of tibia, not femur"}
+      ]
+    },
+    {
+      "icd_chapter": "O00-O9A",
+      "icd_chapter_name": "Pregnancy, childbirth and the puerperium",
+      "achi_main_categories": ["14"],
+      "achi_names": ["Obstetric procedures"],
+      "confidence": 0.95,
+      "examples": [
+        {"icd": "O80.9", "achi": "16520-00", "valid": true, "reasoning": "Normal delivery may require caesarean section if complications arise"},
+        {"icd": "O36.4", "achi": "16520-00", "valid": true, "reasoning": "Maternal care for fetal problem may require caesarean section"}
+      ]
+    },
+    {
+      "icd_chapter": "A00-B99",
+      "icd_chapter_name": "Certain infectious and parasitic diseases",
+      "achi_main_categories": ["19"],
+      "achi_names": ["Non-invasive, cognitive and other interventions"],
+      "confidence": 0.85,
+      "examples": [
+        {"icd": "A00", "achi": "92143-00", "valid": true, "reasoning": "Cholera requires vaccination for prevention"},
+        {"icd": "B01.0", "achi": "11024-00", "valid": true, "reasoning": "Chickenpox may require CNS studies for complications"}
+      ]
+    },
+    {
+      "icd_chapter": "D50-D89",
+      "icd_chapter_name": "Diseases of blood and blood-forming organs and certain disorders involving the immune mechanism",
+      "achi_main_categories": ["09"],
+      "achi_names": ["Procedures on blood and blood-forming organs"],
+      "confidence": 0.95,
+      "examples": [
+        {"icd": "D50.9", "achi": "80000-00", "valid": true, "reasoning": "Iron deficiency anaemia may require bone marrow biopsy"},
+        {"icd": "D46.9", "achi": "80000-00", "valid": true, "reasoning": "Myelodysplastic syndrome requires bone marrow examination"}
+      ]
+    },
+    {
+      "icd_chapter": "Q00-Q99",
+      "icd_chapter_name": "Congenital malformations, deformations and chromosomal abnormalities",
+      "achi_main_categories": ["15", "16"],
+      "achi_names": ["Procedures on musculoskeletal system", "Dermatological and plastic procedures"],
+      "confidence": 0.85,
+      "examples": [
+        {"icd": "Q30.1", "achi": "34103-06", "valid": false, "reasoning": "Nasal malformation requires nasal procedures, not arteriovenous fistula repair"},
+        {"icd": "Q66.9", "achi": "49518-00", "valid": true, "reasoning": "Congenital foot deformity may require orthopedic surgery"}
+      ]
+    }
+  ]
+}
